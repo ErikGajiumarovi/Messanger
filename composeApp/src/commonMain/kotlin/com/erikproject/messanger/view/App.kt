@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.font.FontWeight
+import com.erikproject.messanger.model.LoginModel
 import com.erikproject.messanger.viewmodel.LoginViewModel
 
 enum class Screen { Main, Chat, Login }
@@ -11,7 +12,8 @@ enum class Screen { Main, Chat, Login }
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun App() {
-    val loginVM = LoginViewModel()
+    val loginM = LoginModel()
+    val loginVM = LoginViewModel(loginM)
 
     var currentScreen by remember { mutableStateOf(Screen.Main) }
     var messages by remember { mutableStateOf(listOf("Hello!", "How are you?")) }

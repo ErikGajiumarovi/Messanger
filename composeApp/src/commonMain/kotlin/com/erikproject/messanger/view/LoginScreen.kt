@@ -28,9 +28,16 @@ fun LoginScreen(
     ) {
         Text("SomeText")
         Button(
-            onClick = { vm.login("test","test") }
+            onClick = { vm.login("test", "test") }
         ) {
             Text("click for test")
+        }
+        Button(
+            onClick = {
+
+            }
+        ) {
+            Text("viewModelScope.launch")
         }
         Button(
             onClick = onBack,

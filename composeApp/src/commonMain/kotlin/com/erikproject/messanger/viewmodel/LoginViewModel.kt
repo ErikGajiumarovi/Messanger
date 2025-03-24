@@ -1,12 +1,15 @@
 package com.erikproject.messanger.viewmodel
 
 import com.erikproject.messanger.model.LoginModel
+import com.erikproject.messanger.viewmodel.base.CommonViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+
 
 class LoginViewModel(
     private val loginModel: LoginModel
-) {
+) : CommonViewModel() {
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
     val loginState: StateFlow<LoginState> get() = _loginState
 
@@ -17,6 +20,7 @@ class LoginViewModel(
         viewModelScope.launch {
             _loginState.value = LoginState.Loading
             loginModel.login(userName,password)
+            _loginState.value = LoginState.Idle
         }
     }
 }
