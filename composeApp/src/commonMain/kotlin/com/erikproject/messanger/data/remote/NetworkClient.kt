@@ -1,6 +1,6 @@
 package com.erikproject.messanger.data.remote
 
-import com.erikproject.messanger.data.utils.Time
+import com.erikproject.messanger.utils.Time
 import com.erikproject.messanger.expect_actual.TokenStorage
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body

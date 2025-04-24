@@ -16,3 +16,74 @@ CREATE TABLE local_messages (
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS local_messages_server_id_index ON local_messages(server_id);
+
+
+-- LocalMessages.sq
+
+-- Insert a new message (id is auto-incremented)
+insertMessage:
+INSERT INTO local_messages (server_id, chat_id, sender_id, text, is_deleted, created_at, updated_at, send_status, is_mine, delivery_status, error_message, sync_status, local_media_path)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+-- Select a message by its local ID
+selectMessageById:
+SELECT * FROM local_messages WHERE id = ?;
+
+-- Select a message by its server ID (useful after sending/syncing)
+selectMessageByServerId:
+SELECT * FROM local_messages WHERE server_id = ?;
+
+-- Select all messages for a specific chat, ordered by creation time
+selectMessagesForChat:
+SELECT * FROM local_messages WHERE chat_id = ? AND is_deleted = 0 ORDER BY created_at ASC;
+
+-- Select messages for a chat with pagination (e.g., for loading history)
+-- Note: Order by DESC for loading older messages first, then LIMIT/OFFSET
+selectMessagesForChatPaginated:
+SELECT * FROM local_messages WHERE chat_id = ? AND is_deleted = 0 ORDER BY created_at DESC LIMIT ? OFFSET ?;
+
+-- Select outgoing messages that are pending sending
+selectPendingOutgoingMessages:
+SELECT * FROM local_messages WHERE is_mine = 1 AND send_status = 'pending' AND is_deleted = 0 ORDER BY created_at ASC;
+
+-- Select messages that need syncing (e.g., new, updated, deleted locally)
+selectPendingSyncMessages:
+SELECT * FROM local_messages WHERE sync_status = 'pending' ORDER BY created_at ASC;
+
+-- Update all fields of a message by local ID
+updateMessage:
+UPDATE local_messages
+SET server_id = ?, chat_id = ?, sender_id = ?, text = ?, is_deleted = ?, created_at = ?, updated_at = ?, send_status = ?, is_mine = ?, delivery_status = ?, error_message = ?, sync_status = ?, local_media_path = ?
+WHERE id = ?;
+
+-- Update message server ID and sync status after successful send/sync
+updateMessageServerIdAndSyncStatus:
+UPDATE local_messages
+SET server_id = ?, sync_status = 'synced', updated_at = ?
+WHERE id = ?;
+
+-- Update message send status and potential error message
+updateMessageSendStatus:
+UPDATE local_messages
+SET send_status = ?, updated_at = ?, error_message = ?
+WHERE id = ?;
+
+-- Update message delivery status (usually based on server_id)
+updateMessageDeliveryStatus:
+UPDATE local_messages
+SET delivery_status = ?, updated_at = ?
+WHERE server_id = ?;
+
+-- Mark a message as deleted (soft delete)
+markMessageAsDeleted:
+UPDATE local_messages
+SET is_deleted = 1, updated_at = ?, sync_status = 'pending' -- Mark for sync
+WHERE id = ?;
+
+-- Delete a message by its local ID (hard delete)
+deleteMessageById:
+DELETE FROM local_messages WHERE id = ?;
+
+-- Delete all messages for a specific chat
+deleteMessagesForChat:
+DELETE FROM local_messages WHERE chat_id = ?;

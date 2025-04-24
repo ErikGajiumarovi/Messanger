@@ -1,4 +1,4 @@
-package com.erikproject.messanger.data.utils
+package com.erikproject.messanger.utils
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime

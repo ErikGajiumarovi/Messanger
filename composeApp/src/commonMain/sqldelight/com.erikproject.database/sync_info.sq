@@ -5,3 +5,46 @@ CREATE TABLE sync_info (
     pending_changes_count INTEGER NOT NULL DEFAULT 0,
     error_message TEXT
 );
+
+-- SyncInfo.sq
+
+-- Insert or replace sync information for a specific entity type
+insertOrReplaceSyncInfo:
+INSERT OR REPLACE INTO sync_info (entity_type, last_sync_time, sync_status, pending_changes_count, error_message)
+VALUES (?, ?, ?, ?, ?);
+
+-- Select sync information for a specific entity type
+selectSyncInfoByType:
+SELECT * FROM sync_info WHERE entity_type = ?;
+
+-- Select all sync information entries
+selectAllSyncInfo:
+SELECT * FROM sync_info;
+
+-- Update sync information for an entity type
+updateSyncInfo:
+UPDATE sync_info
+SET last_sync_time = ?, sync_status = ?, pending_changes_count = ?, error_message = ?
+WHERE entity_type = ?;
+
+-- Update sync status and error message
+updateSyncStatus:
+UPDATE sync_info
+SET sync_status = ?, error_message = ?
+WHERE entity_type = ?;
+
+-- Increment the count of pending changes for an entity type
+incrementPendingChanges:
+UPDATE sync_info
+SET pending_changes_count = pending_changes_count + 1
+WHERE entity_type = ?;
+
+-- Reset the count of pending changes for an entity type
+resetPendingChanges:
+UPDATE sync_info
+SET pending_changes_count = 0
+WHERE entity_type = ?;
+
+-- Delete sync information for a specific entity type
+deleteSyncInfoByType:
+DELETE FROM sync_info WHERE entity_type = ?;

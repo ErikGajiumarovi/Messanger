@@ -15,3 +15,52 @@ CREATE TABLE local_chats (
     is_draft INTEGER  NOT NULL DEFAULT 0,
     last_draft_text TEXT
 );
+
+-- LocalChats.sq
+
+-- Insert a new chat
+insertChat:
+INSERT INTO local_chats (id, type, name, description, creator_id, created_at, avatar_url, avatar_local_path, last_message_id, last_message_text, last_message_time, unread_count, last_sync_time, is_draft, last_draft_text)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+-- Select a chat by its ID
+selectChatById:
+SELECT * FROM local_chats WHERE id = ?;
+
+-- Select all chats (ordered by last message time for typical chat list display)
+selectAllChatsOrdered:
+SELECT * FROM local_chats ORDER BY last_message_time DESC;
+
+-- Update all fields of a chat by ID
+updateChat:
+UPDATE local_chats
+SET type = ?, name = ?, description = ?, creator_id = ?, created_at = ?, avatar_url = ?, avatar_local_path = ?, last_message_id = ?, last_message_text = ?, last_message_time = ?, unread_count = ?, last_sync_time = ?, is_draft = ?, last_draft_text = ?
+WHERE id = ?;
+
+-- Update chat's last message info and increment unread count
+updateChatLastMessage:
+UPDATE local_chats
+SET last_message_id = ?, last_message_text = ?, last_message_time = ?, unread_count = unread_count + 1
+WHERE id = ?;
+
+-- Update unread count for a chat
+updateChatUnreadCount:
+UPDATE local_chats
+SET unread_count = ?
+WHERE id = ?;
+
+-- Update chat's sync time
+updateChatSyncTime:
+UPDATE local_chats
+SET last_sync_time = ?
+WHERE id = ?;
+
+-- Update chat's draft info
+updateChatDraft:
+UPDATE local_chats
+SET is_draft = ?, last_draft_text = ?
+WHERE id = ?;
+
+-- Delete a chat by its ID
+deleteChatById:
+DELETE FROM local_chats WHERE id = ?;

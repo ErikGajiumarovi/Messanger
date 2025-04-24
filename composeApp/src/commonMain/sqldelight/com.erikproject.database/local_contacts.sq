@@ -13,3 +13,55 @@ CREATE TABLE local_contacts (
     last_sync_time INTEGER NOT NULL,
     is_deleted INTEGER  NOT NULL DEFAULT 0
 );
+
+-- LocalContacts.sq
+
+-- Insert a new contact
+insertContact:
+INSERT INTO local_contacts (contact_id, name, username, phone_number, email, avatar_url, avatar_local_path, about, last_seen, online, status, last_sync_time, is_deleted)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+-- Insert or replace a contact (useful for syncing)
+insertOrReplaceContact:
+INSERT OR REPLACE INTO local_contacts (contact_id, name, username, phone_number, email, avatar_url, avatar_local_path, about, last_seen, online, status, last_sync_time, is_deleted)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+-- Select a contact by its ID
+selectContactById:
+SELECT * FROM local_contacts WHERE contact_id = ?;
+
+-- Select a contact by username
+selectContactByUsername:
+SELECT * FROM local_contacts WHERE username = ? AND is_deleted = 0;
+
+-- Select all contacts that are not marked as deleted
+selectAllContacts:
+SELECT * FROM local_contacts WHERE is_deleted = 0 ORDER BY name ASC; -- Order by name is common
+
+-- Update all fields of a contact by ID
+updateContact:
+UPDATE local_contacts
+SET name = ?, username = ?, phone_number = ?, email = ?, avatar_url = ?, avatar_local_path = ?, about = ?, last_seen = ?, online = ?, status = ?, last_sync_time = ?, is_deleted = ?
+WHERE contact_id = ?;
+
+-- Update contact status and sync time
+updateContactStatus:
+UPDATE local_contacts
+SET status = ?, last_sync_time = ?
+WHERE contact_id = ?;
+
+-- Update contact online status and last seen time
+updateContactOnlineStatus:
+UPDATE local_contacts
+SET online = ?, last_seen = ?
+WHERE contact_id = ?;
+
+-- Mark a contact as deleted (soft delete)
+markContactAsDeleted:
+UPDATE local_contacts
+SET is_deleted = 1, last_sync_time = ?
+WHERE contact_id = ?;
+
+-- Delete a contact by its ID (hard delete)
+deleteContactById:
+DELETE FROM local_contacts WHERE contact_id = ?;

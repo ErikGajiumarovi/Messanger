@@ -6,3 +6,36 @@ CREATE TABLE media_cache (
     last_accessed INTEGER NOT NULL,
     expires_at INTEGER
 );
+
+-- MediaCache.sq
+
+-- Insert or replace a media cache entry (url is primary key)
+insertOrReplaceMediaCache:
+INSERT OR REPLACE INTO media_cache (url, local_path, type, size, last_accessed, expires_at)
+VALUES (?, ?, ?, ?, ?, ?);
+
+-- Select a media cache entry by URL
+selectMediaCacheByUrl:
+SELECT * FROM media_cache WHERE url = ?;
+
+-- Select media cache entries that have expired
+selectExpiredMediaCache:
+SELECT * FROM media_cache WHERE expires_at IS NOT NULL AND expires_at < ?; -- ? is current timestamp
+
+-- Update the last accessed time for a cache entry
+updateMediaCacheAccessTime:
+UPDATE media_cache
+SET last_accessed = ?
+WHERE url = ?;
+
+-- Delete a media cache entry by URL
+deleteMediaCacheByUrl:
+DELETE FROM media_cache WHERE url = ?;
+
+-- Delete all expired media cache entries
+deleteExpiredMediaCache:
+DELETE FROM media_cache WHERE expires_at IS NOT NULL AND expires_at < ?; -- ? is current timestamp
+
+-- Delete all media cache entries
+deleteAllMediaCache:
+DELETE FROM media_cache;

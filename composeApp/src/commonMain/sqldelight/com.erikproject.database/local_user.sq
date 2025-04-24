@@ -9,3 +9,34 @@ CREATE TABLE local_user (
     about TEXT,
     last_sync_time INTEGER
 );
+
+-- LocalUser.sq
+
+-- Insert or replace the current user's data (assuming only one user row)
+insertOrReplaceUser:
+INSERT OR REPLACE INTO local_user (id, username, email, phone_number, name, avatar_url, avatar_local_path, about, last_sync_time)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+-- Select the current user's data by ID
+selectUserById:
+SELECT * FROM local_user WHERE id = ?;
+
+-- Select the current user's data (assuming only one row exists)
+selectCurrentUser:
+SELECT * FROM local_user LIMIT 1;
+
+-- Update the current user's data by ID
+updateUser:
+UPDATE local_user
+SET username = ?, email = ?, phone_number = ?, name = ?, avatar_url = ?, avatar_local_path = ?, about = ?, last_sync_time = ?
+WHERE id = ?;
+
+-- Update user's sync time
+updateUserSyncTime:
+UPDATE local_user
+SET last_sync_time = ?
+WHERE id = ?;
+
+-- Delete the current user's data by ID (e.g., on logout)
+deleteUserById:
+DELETE FROM local_user WHERE id = ?;

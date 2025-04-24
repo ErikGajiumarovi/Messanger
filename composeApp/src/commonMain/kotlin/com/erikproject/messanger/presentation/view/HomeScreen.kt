@@ -1,4 +1,4 @@
-package com.erikproject.messanger.mvvm.view
+package com.erikproject.messanger.presentation.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

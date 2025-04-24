@@ -5,3 +5,41 @@ CREATE TABLE local_message_statuses (
     updated_at INTEGER NOT NULL,
     PRIMARY KEY(message_server_id, user_id)
 );
+
+-- LocalMessageStatuses.sq
+
+-- Insert a message status for a user
+insertMessageStatus:
+INSERT INTO local_message_statuses (message_server_id, user_id, status, updated_at)
+VALUES (?, ?, ?, ?);
+
+-- Insert or replace a message status (useful if status can change)
+insertOrReplaceMessageStatus:
+INSERT OR REPLACE INTO local_message_statuses (message_server_id, user_id, status, updated_at)
+VALUES (?, ?, ?, ?);
+
+-- Select a specific message status for a message and user
+selectMessageStatus:
+SELECT * FROM local_message_statuses WHERE message_server_id = ? AND user_id = ?;
+
+-- Select all statuses for a given message
+selectStatusesForMessage:
+SELECT * FROM local_message_statuses WHERE message_server_id = ?;
+
+-- Select all statuses for a given user
+selectStatusesForUser:
+SELECT * FROM local_message_statuses WHERE user_id = ?;
+
+-- Update a message status for a message and user
+updateMessageStatus:
+UPDATE local_message_statuses
+SET status = ?, updated_at = ?
+WHERE message_server_id = ? AND user_id = ?;
+
+-- Delete a specific message status for a message and user
+deleteMessageStatus:
+DELETE FROM local_message_statuses WHERE message_server_id = ? AND user_id = ?;
+
+-- Delete all statuses for a given message
+deleteStatusesForMessage:
+DELETE FROM local_message_statuses WHERE message_server_id = ?;
