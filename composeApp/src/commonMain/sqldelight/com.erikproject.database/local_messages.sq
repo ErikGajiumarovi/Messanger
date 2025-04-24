@@ -1,0 +1,18 @@
+CREATE TABLE local_messages (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    server_id INTEGER,
+    chat_id INTEGER NOT NULL,
+    sender_id INTEGER NOT NULL,
+    text TEXT,
+    is_deleted INTEGER  NOT NULL DEFAULT 0,
+    created_at INTEGER NOT NULL,
+    updated_at INTEGER,
+    send_status TEXT NOT NULL DEFAULT 'pending',
+    is_mine INTEGER  NOT NULL DEFAULT 0,
+    delivery_status TEXT NOT NULL DEFAULT 'sent',
+    error_message TEXT,
+    sync_status TEXT NOT NULL DEFAULT 'pending',
+    local_media_path TEXT
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS local_messages_server_id_index ON local_messages(server_id);

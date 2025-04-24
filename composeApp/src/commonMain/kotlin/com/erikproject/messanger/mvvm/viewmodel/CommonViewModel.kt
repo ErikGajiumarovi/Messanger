@@ -8,7 +8,7 @@ import kotlinx.coroutines.cancel
  * Базовый класс для всех ViewModel в KMP-приложении.
  * Обеспечивает общую функциональность управления корутинами для всех платформ.
  */
-open class CommonViewModel {
+abstract class CommonViewModel {
     // CoroutineScope для этой ViewModel
     // SupervisorJob позволяет нам избежать отмены всех дочерних корутин при сбое одной из них
     val viewModelScope = CoroutineScope(SupervisorJob())

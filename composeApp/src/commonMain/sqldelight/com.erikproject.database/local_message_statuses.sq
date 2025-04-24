@@ -1,0 +1,7 @@
+CREATE TABLE local_message_statuses (
+    message_server_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    status TEXT NOT NULL,
+    updated_at INTEGER NOT NULL,
+    PRIMARY KEY(message_server_id, user_id)
+);

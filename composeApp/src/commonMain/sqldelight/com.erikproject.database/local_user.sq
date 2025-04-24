@@ -1,0 +1,11 @@
+CREATE TABLE local_user (
+    id INTEGER NOT NULL PRIMARY KEY,
+    username TEXT NOT NULL,
+    email TEXT NOT NULL,
+    phone_number TEXT NOT NULL,
+    name TEXT,
+    avatar_url TEXT,
+    avatar_local_path TEXT,
+    about TEXT,
+    last_sync_time INTEGER
+);

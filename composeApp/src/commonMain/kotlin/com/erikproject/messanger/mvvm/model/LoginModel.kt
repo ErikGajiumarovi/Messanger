@@ -1,4 +1,4 @@
-package com.erikproject.messanger.model
+package com.erikproject.messanger.mvvm.model
 
 import kotlinx.coroutines.delay
 

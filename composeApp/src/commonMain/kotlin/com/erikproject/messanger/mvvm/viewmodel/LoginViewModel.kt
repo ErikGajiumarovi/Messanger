@@ -1,6 +1,6 @@
-package com.erikproject.messanger.viewmodel
+package com.erikproject.messanger.mvvm.viewmodel
 
-import com.erikproject.messanger.model.LoginModel
+import com.erikproject.messanger.mvvm.model.LoginModel
 import com.erikproject.messanger.viewmodel.base.CommonViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

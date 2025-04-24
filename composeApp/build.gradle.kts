@@ -1,24 +1,37 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    id("app.cash.sqldelight") version "2.0.2"
+}
+
+
+sqldelight {
+    databases {
+        create("MessengerDatabase") {
+            packageName.set("com.erikproject.database")
+        }
+    }
 }
 
 kotlin {
     androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "17"
+            }
         }
     }
-
-    // Настройка iOS-таргетов
+    jvm("desktop") {
+        compilations.all {
+            kotlinOptions.jvmTarget = "17"
+        }
+    }
     listOf(
         iosX64(),
         iosArm64(),
@@ -29,18 +42,9 @@ kotlin {
             isStatic = true
         }
     }
-
-    // Настройка Desktop-таргета
-    jvm("desktop") {
-        compilations.all {
-            kotlinOptions.jvmTarget = "11"
-        }
-    }
-
     sourceSets {
         val desktopMain by getting
 
-        // Общие зависимости для всех платформ
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -48,9 +52,38 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation(libs.kotlinx.coroutines.core) // Для асинхронных операций
-            implementation(libs.kotlinx.serialization.json) // Для работы с JSON (если нужно)
-            implementation(libs.ktor.client.core) // Для сетевых запросов (если нужно)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.serialization.json)
+
+            // JWT обработка
+            implementation(libs.napier)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+
+            // Storage
+            implementation(libs.okio)
+
+            // Network
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.client.websockets)
+            implementation(libs.ktor.client.json)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.utils)
+
+            // coroutines
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.ktor.serialization.kotlinx.json)
+
+
+            // SQLDelight
+            implementation("org.slf4j:slf4j-api:1.7.32")
+            implementation("ch.qos.logback:logback-classic:1.4.12")
+            implementation("app.cash.sqldelight:coroutines-extensions:2.0.0")
+
+            // Date & Time
+            implementation(libs.kotlinx.datetime)
+
         }
 
         // Зависимости для Android
@@ -59,19 +92,40 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
-            implementation(libs.ktor.client.android) // Для сетевых запросов на Android
+
+            // SQL
+            implementation(libs.android.driver)
+
+            // Network
+            implementation(libs.ktor.client.android)
         }
 
         // Зависимости для Desktop
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
-            implementation(libs.ktor.client.java) // Для сетевых запросов на Desktop
+
+
+            // Network
+            implementation(libs.ktor.client.cio)
+            implementation(libs.ktor.client.java)
+
+            // SQL
+            implementation(libs.sqldelight.sqlite.driver)
         }
 
         // Зависимости для iOS
         iosMain.dependencies {
-//            implementation(libs.ktor.client.ios) // Для сетевых запросов на iOS
+            implementation(libs.ui.util)
+            implementation(libs.foundation)
+            implementation(compose.ui)
+            implementation(compose.foundation)
+            implementation(compose.runtime)
+
+            // Network
+            implementation(libs.ktor.client.darwin)
+            // SQL
+            implementation(libs.native.driver)
         }
     }
 }

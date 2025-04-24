@@ -1,0 +1,45 @@
+CREATE TABLE local_chat_members (
+    chat_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    role TEXT NOT NULL DEFAULT 'member',
+    joined_at INTEGER,
+    last_sync_time INTEGER NOT NULL,
+    PRIMARY KEY(chat_id, user_id)
+);
+
+-- Вставка новой записи
+insertMember:
+INSERT INTO local_chat_members(chat_id, user_id, role, joined_at, last_sync_time)
+VALUES (?, ?, ?, ?, ?);
+
+-- Обновление существующей записи
+updateMember:
+UPDATE local_chat_members
+SET role = ?, joined_at = ?, last_sync_time = ?
+WHERE chat_id = ? AND user_id = ?;
+
+-- Удаление записи
+deleteMember:
+DELETE FROM local_chat_members
+WHERE chat_id = ? AND user_id = ?;
+
+-- Получение всех участников чата
+selectMembersByChatId:
+SELECT * FROM local_chat_members
+WHERE chat_id = ?;
+
+-- Получение конкретного участника
+selectMemberByChatAndUser:
+SELECT * FROM local_chat_members
+WHERE chat_id = ? AND user_id = ?;
+
+-- Получение всех чатов, в которых участвует пользователь
+selectChatsByUserId:
+SELECT * FROM local_chat_members
+WHERE user_id = ?;
+
+-- Обновление времени синхронизации
+updateSyncTime:
+UPDATE local_chat_members
+SET last_sync_time = ?
+WHERE chat_id = ? AND user_id = ?;

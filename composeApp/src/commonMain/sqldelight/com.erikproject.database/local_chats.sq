@@ -1,0 +1,17 @@
+CREATE TABLE local_chats (
+    id INTEGER NOT NULL PRIMARY KEY,
+    type TEXT NOT NULL,
+    name TEXT,
+    description TEXT,
+    creator_id INTEGER,
+    created_at INTEGER,
+    avatar_url TEXT,
+    avatar_local_path TEXT,
+    last_message_id INTEGER,
+    last_message_text TEXT,
+    last_message_time INTEGER,
+    unread_count INTEGER NOT NULL DEFAULT 0,
+    last_sync_time INTEGER NOT NULL,
+    is_draft INTEGER  NOT NULL DEFAULT 0,
+    last_draft_text TEXT
+);

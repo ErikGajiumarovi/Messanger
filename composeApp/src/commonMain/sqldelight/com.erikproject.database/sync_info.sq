@@ -1,0 +1,7 @@
+CREATE TABLE sync_info (
+    entity_type TEXT NOT NULL PRIMARY KEY,
+    last_sync_time INTEGER NOT NULL,
+    sync_status TEXT NOT NULL,
+    pending_changes_count INTEGER NOT NULL DEFAULT 0,
+    error_message TEXT
+);
