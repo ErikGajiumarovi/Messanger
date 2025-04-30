@@ -1,9 +1,9 @@
 package com.erikproject.messanger.presentation.viewmodel
 
-import com.erikproject.messanger.presentation.model.HomeModel
+import androidx.lifecycle.ViewModel
 
 class HomeViewModel(
-    model: HomeModel
-) {
+
+) : ViewModel() {
 
 }

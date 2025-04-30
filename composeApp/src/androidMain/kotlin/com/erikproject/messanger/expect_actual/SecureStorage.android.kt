@@ -3,7 +3,7 @@ package com.erikproject.messanger.expect_actual
 import android.content.Context
 import com.erikproject.messanger.platform_specific.KmpInitializer.applicationContext
 
-actual object TokenStorage {
+actual class TokenStorage {
     private val prefs = applicationContext.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
 
     actual fun saveAccessToken(token: String) {

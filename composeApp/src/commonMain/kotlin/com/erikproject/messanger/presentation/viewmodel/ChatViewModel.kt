@@ -1,4 +1,9 @@
 package com.erikproject.messanger.presentation.viewmodel
 
-class ChatViewModel {
+import androidx.lifecycle.ViewModel
+
+class ChatViewModel(
+
+) : ViewModel() {
+
 }

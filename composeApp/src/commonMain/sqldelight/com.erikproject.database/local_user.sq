@@ -1,4 +1,4 @@
-CREATE TABLE local_user (
+CREATE TABLE IF NOT EXISTS local_user (
     id INTEGER NOT NULL PRIMARY KEY,
     username TEXT NOT NULL,
     email TEXT NOT NULL,

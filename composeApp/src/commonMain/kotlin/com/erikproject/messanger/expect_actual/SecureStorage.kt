@@ -1,6 +1,6 @@
 package com.erikproject.messanger.expect_actual
 
-expect object TokenStorage {
+expect class TokenStorage() {
     fun saveAccessToken(token: String)
     fun saveRefreshToken(token: String)
 

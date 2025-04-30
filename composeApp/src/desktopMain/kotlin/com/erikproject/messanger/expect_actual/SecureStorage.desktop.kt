@@ -2,7 +2,7 @@ package com.erikproject.messanger.expect_actual
 
 import java.util.prefs.Preferences
 
-actual object TokenStorage {
+actual class TokenStorage {
     private val prefs = Preferences.userRoot()
 
     actual fun saveAccessToken(token: String) {

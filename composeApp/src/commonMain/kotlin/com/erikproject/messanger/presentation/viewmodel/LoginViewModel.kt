@@ -1,33 +1,83 @@
 package com.erikproject.messanger.presentation.viewmodel
 
-import com.erikproject.messanger.presentation.model.LoginModel
-import com.erikproject.messanger.viewmodel.base.CommonViewModel
+import com.erikproject.messanger.data.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-
 class LoginViewModel(
-    private val loginModel: LoginModel
-) : CommonViewModel() {
-    private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
-    val loginState: StateFlow<LoginState> get() = _loginState
+    private val repository: UserRepository
+) : CustomViewModel() {
 
-    fun login(
-        userName: String,
-        password: String
-    ) {
-        viewModelScope.launch {
-            _loginState.value = LoginState.Loading
-            loginModel.login(userName,password)
-            _loginState.value = LoginState.Idle
+    // Поля для редактирования со стороны View
+    private val _username = MutableStateFlow("")
+    val username = _username.asStateFlow()
+
+    private val _password = MutableStateFlow("")
+    val password = _password.asStateFlow()
+
+    private val _otp = MutableStateFlow("")
+    val otp = _otp.asStateFlow()
+
+    private val _email = MutableStateFlow("")
+    val email = _email.asStateFlow()
+
+    private val _phoneNumber = MutableStateFlow("")
+    val phoneNumber = _phoneNumber.asStateFlow()
+
+    //
+    // Состояния для View
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
+
+    fun updateUsername(value: String) {
+        _username.value = value
+    }
+
+    fun updatePassword(value: String) {
+        _password.value = value
+    }
+
+    fun updateOtp(value: String) {
+        _otp.value = value
+    }
+
+    fun updateEmail(value: String) {
+        _email.value = value
+    }
+
+    fun updatePhoneNumber(value: String) {
+        if (value.matches(Regex("^\\+?\\d*$"))) {
+            _phoneNumber.value = value
         }
     }
-}
 
-sealed class LoginState {
-    object Idle : LoginState()
-    object Loading : LoginState()
-    object Success : LoginState()
-    data class Error(val message: String) : LoginState()
+    fun login() {
+        viewModelScope.launch {
+            repository.loginUser(
+                _username.value,
+                _password.value
+            )
+        }
+    }
+
+    fun register() {
+        viewModelScope.launch {
+            repository.registerUser(
+                _username.value,
+                _email.value,
+                _phoneNumber.value,
+                _password.value
+            )
+        }
+    }
+
+    fun verify() {
+        viewModelScope.launch {
+            repository.verifyUser(
+                _username.value,
+                _otp.value
+            )
+        }
+    }
 }

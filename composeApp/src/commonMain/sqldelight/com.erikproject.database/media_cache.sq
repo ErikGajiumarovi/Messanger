@@ -1,4 +1,4 @@
-CREATE TABLE media_cache (
+CREATE TABLE IF NOT EXISTS media_cache (
     url TEXT NOT NULL PRIMARY KEY,
     local_path TEXT NOT NULL,
     type TEXT NOT NULL,

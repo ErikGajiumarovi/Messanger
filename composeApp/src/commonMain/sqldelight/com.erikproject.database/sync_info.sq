@@ -1,4 +1,4 @@
-CREATE TABLE sync_info (
+CREATE TABLE IF NOT EXISTS sync_info (
     entity_type TEXT NOT NULL PRIMARY KEY,
     last_sync_time INTEGER NOT NULL,
     sync_status TEXT NOT NULL,

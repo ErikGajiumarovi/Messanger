@@ -1,6 +1,4 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -40,6 +38,9 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+
+            // тожесамое нужно добавить в Target → Build Settings/Other Linker Flags/ -lsqlite3
+            linkerOpts.add("-lsqlite3")
         }
     }
     sourceSets {
@@ -48,7 +49,7 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.material3) // Используем Material 3
+            implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
@@ -84,6 +85,16 @@ kotlin {
             // Date & Time
             implementation(libs.kotlinx.datetime)
 
+            // DI
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.koin.compose.viewmodel.navigation)
+
+            implementation(libs.lifecycle.viewmodel.compose.v282)
+
+            implementation(libs.lifecycle.viewmodel)
+            implementation(libs.lifecycle.viewmodel.compose)
         }
 
         // Зависимости для Android
@@ -98,6 +109,22 @@ kotlin {
 
             // Network
             implementation(libs.ktor.client.android)
+
+            // DI
+            implementation(libs.koin.androidx.compose)
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.koin.compose.viewmodel.navigation)
+
+            implementation(libs.lifecycle.viewmodel.compose.v282)
+
+            implementation(libs.lifecycle.viewmodel)
+            implementation(libs.lifecycle.viewmodel.compose)
+
+            configurations.all {
+                exclude(group = "ch.qos.logback")
+            }
         }
 
         // Зависимости для Desktop
@@ -144,7 +171,23 @@ android {
 
     packaging {
         resources {
+            // Ваши существующие исключения
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            // Добавляем исключение для файла из ошибки
+            excludes += "/META-INF/INDEX.LIST"
+            // Рекомендуется добавить и другие стандартные исключения
+            // для предотвращения подобных проблем в будущем:
+            excludes += "/META-INF/LICENSE.md"
+            excludes += "/META-INF/LICENSE-notice.md"
+            excludes += "META-INF/DEPENDENCIES"
+            excludes += "META-INF/LICENSE"
+            excludes += "META-INF/LICENSE.txt"
+            excludes += "META-INF/license.txt"
+            excludes += "META-INF/NOTICE"
+            excludes += "META-INF/NOTICE.txt"
+            excludes += "META-INF/notice.txt"
+            excludes += "META-INF/ASL2.0"
+            excludes += "META-INF/*.kotlin_module"
         }
     }
 
@@ -155,8 +198,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 

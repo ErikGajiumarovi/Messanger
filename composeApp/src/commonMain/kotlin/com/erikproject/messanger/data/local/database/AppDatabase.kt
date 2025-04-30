@@ -2,6 +2,7 @@ package com.erikproject.messanger.data.local.database
 
 import app.cash.sqldelight.db.SqlDriver
 import com.erikproject.database.MessengerDatabase
+import com.erikproject.messanger.data.storage.FileUtils
 import com.erikproject.messanger.expect_actual.getDriver
 import com.erikproject.messanger.expect_actual.getPathToDBs
 
@@ -10,7 +11,12 @@ class AppDatabase private constructor(
 ) {
     companion object {
         fun create(): AppDatabase {
-            return AppDatabase(getDriver(getPathToDBs().resolve("messenger.db")))
+            println("trying to mkdir for ${getPathToDBs()}")
+            FileUtils.mkdir(getPathToDBs())
+            val rv = AppDatabase(getDriver(getPathToDBs().resolve("messenger.db")))
+            println("init AppDatabase")
+            return rv
+
         }
     }
 

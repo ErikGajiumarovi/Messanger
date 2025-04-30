@@ -1,7 +1,7 @@
 package com.erikproject.messanger.data.remote
 
-import com.erikproject.messanger.utils.Time
 import com.erikproject.messanger.expect_actual.TokenStorage
+import com.erikproject.messanger.utils.Time
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.DefaultRequest
@@ -18,6 +18,7 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.longOrNull

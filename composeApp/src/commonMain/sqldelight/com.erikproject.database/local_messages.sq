@@ -1,4 +1,4 @@
-CREATE TABLE local_messages (
+CREATE TABLE IF NOT EXISTS local_messages (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     server_id INTEGER,
     chat_id INTEGER NOT NULL,

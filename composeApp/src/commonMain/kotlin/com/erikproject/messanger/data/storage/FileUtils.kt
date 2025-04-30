@@ -25,23 +25,6 @@ object FileUtils {
         return FileSystem.SYSTEM.delete(path)
     }
 
-    fun getPathThisUserDirectory(): Path {
-        // TODO
-        return ("${getPath()}/${"testFolder"}").toPath()
-    }
-
-    // Получение пути к проекту
-    fun getPathToPrj(pid: String): Path {
-        return getPathThisUserDirectory().resolve("p_$pid")
-    }
-
-    fun deletePrjFolder(pid: String) {
-        val projectDir = getPathToPrj(pid)
-        if (exists(projectDir)) {
-            deleteDirectory(projectDir, true)
-        }
-    }
-
     // Рекурсивное удаление папки или файла
     fun deleteDirectory(path: Path, rootDirectory: Boolean) {
         if (!exists(path)) return
@@ -56,55 +39,8 @@ object FileUtils {
         }
     }
 
-    // Проверка существования базы данных проекта
-    fun isDBExists(pid: String): Boolean {
-        val projectFilePath = getPathToPrj(pid).resolve("project.sldb")
-        return exists(projectFilePath)
-    }
-
-    // Создание подпапки в проекте
-    private fun createPrjSubFolder(pid: String, subFolderName: String) {
-        val subFolderPath = getPathToPrj(pid).resolve(subFolderName)
-        try {
-            mkdir(subFolderPath)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
     fun mkdir(folder: Path) {
         FileSystem.SYSTEM.createDirectory(folder)
-    }
-
-    // Очистка определенных подпапок проекта
-    fun clearPrjSubFolder(pid: String) {
-        listOf("recs", "pics", "videos").forEach { subFolder ->
-            val folderPath = getPathToPrj(pid).resolve(subFolder)
-            if (exists(folderPath)) {
-                deleteDirectory(folderPath, false)
-            }
-        }
-    }
-
-    // Создание папки проекта
-    fun createPrjFolder4(pid: String) {
-        val projectPath = getPathToPrj(pid)
-        try {
-            if (!exists(projectPath)) {
-                FileSystem.SYSTEM.createDirectories(projectPath)
-                listOf("res", "recs", "pics", "backup").forEach {
-                    createPrjSubFolder(pid, it)
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    // Проверка существования проекта
-    fun isPrjExists(pid: String): Boolean {
-        val path = getPathToPrj(pid)
-        return exists(path) && FileSystem.SYSTEM.metadataOrNull(path)?.isDirectory == true
     }
 
     fun exists(path: Path): Boolean {

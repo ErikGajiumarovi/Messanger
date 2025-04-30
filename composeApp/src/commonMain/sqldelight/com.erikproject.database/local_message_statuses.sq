@@ -1,4 +1,4 @@
-CREATE TABLE local_message_statuses (
+CREATE TABLE IF NOT EXISTS local_message_statuses (
     message_server_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
     status TEXT NOT NULL,

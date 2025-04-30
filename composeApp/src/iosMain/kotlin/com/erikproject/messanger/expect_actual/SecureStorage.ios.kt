@@ -2,7 +2,7 @@ package com.erikproject.messanger.expect_actual
 
 import platform.Foundation.NSUserDefaults
 
-actual object TokenStorage {
+actual class TokenStorage {
     private val defaults = NSUserDefaults.standardUserDefaults
 
     actual fun saveAccessToken(token: String) {
