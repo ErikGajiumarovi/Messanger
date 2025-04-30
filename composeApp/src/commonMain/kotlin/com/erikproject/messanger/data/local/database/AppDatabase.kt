@@ -6,20 +6,9 @@ import com.erikproject.messanger.data.storage.FileUtils
 import com.erikproject.messanger.expect_actual.getDriver
 import com.erikproject.messanger.expect_actual.getPathToDBs
 
-class AppDatabase private constructor(
+class AppDatabase (
     private val driver: SqlDriver
 ) {
-    companion object {
-        fun create(): AppDatabase {
-            println("trying to mkdir for ${getPathToDBs()}")
-            FileUtils.mkdir(getPathToDBs())
-            val rv = AppDatabase(getDriver(getPathToDBs().resolve("messenger.db")))
-            println("init AppDatabase")
-            return rv
-
-        }
-    }
-
     private val internalDb by lazy { MessengerDatabase(driver) }
 
     init {

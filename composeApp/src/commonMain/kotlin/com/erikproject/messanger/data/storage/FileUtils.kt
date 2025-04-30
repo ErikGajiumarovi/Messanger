@@ -1,6 +1,5 @@
 package com.erikproject.messanger.data.storage
 
-import com.erikproject.messanger.expect_actual.getPath
 import com.erikproject.messanger.expect_actual.getPathToDBs
 import okio.FileSystem
 import okio.Path
@@ -40,7 +39,11 @@ object FileUtils {
     }
 
     fun mkdir(folder: Path) {
-        FileSystem.SYSTEM.createDirectory(folder)
+        try {
+            FileSystem.SYSTEM.createDirectories(folder)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun exists(path: Path): Boolean {
