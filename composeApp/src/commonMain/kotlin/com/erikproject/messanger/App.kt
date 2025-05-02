@@ -18,11 +18,11 @@ import com.erikproject.messanger.presentation.viewmodel.HomeViewModel
 import com.erikproject.messanger.presentation.viewmodel.LoginViewModel
 import org.koin.mp.KoinPlatform.getKoin
 
-enum class Screen { Main, Chat, Login }
+enum class Screen { Home, Chat, Login }
 
 @Composable
 fun App() {
-    val currentScreen by remember { mutableStateOf(Screen.Login) }
+    val currentScreen by remember { mutableStateOf(Screen.Home) }
 
     FileUtils.mkdir(getPathToDBs())
 
@@ -34,7 +34,7 @@ fun App() {
         )
     ) {
         when (currentScreen) {
-            Screen.Main -> HomeScreen(HomeViewModel())
+            Screen.Home -> HomeScreen(HomeViewModel())
             Screen.Chat -> ChatScreen(ChatViewModel())
             Screen.Login -> {
                 val loginViewModel: LoginViewModel = getKoin().get()
