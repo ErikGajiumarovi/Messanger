@@ -1,5 +1,6 @@
 package com.erikproject.messanger.presentation.view
 
+import ChatsScreen
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,10 +27,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.erikproject.messanger.presentation.view.home_components.ChatsScreen
 import com.erikproject.messanger.presentation.view.home_components.ContactsScreen
 import com.erikproject.messanger.presentation.view.home_components.ProfileScreen
 import com.erikproject.messanger.presentation.view.home_components.SettingsScreen
+import com.erikproject.messanger.presentation.viewmodel.ChatsViewModel
 import com.erikproject.messanger.presentation.viewmodel.HomeViewModel
 
 @Composable
@@ -113,7 +114,7 @@ fun HomeScreen(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Screen.Chats.route) {
-                ChatsScreen()
+                ChatsScreen(ChatsViewModel())
             }
             composable(Screen.Contacts.route) {
                 ContactsScreen()
