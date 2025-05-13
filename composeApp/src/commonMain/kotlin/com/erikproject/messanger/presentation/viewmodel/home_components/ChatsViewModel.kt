@@ -2,23 +2,27 @@ package com.erikproject.messanger.presentation.viewmodel.home_components
 
 import com.erikproject.messanger.Navigator
 import com.erikproject.messanger.Screen
-import com.erikproject.messanger.mock.FakeDummyData.generateSampleChats
-import com.erikproject.messanger.mock.FakeDummyData.generateSampleChatsMembers
-import com.erikproject.messanger.mock.FakeDummyData.generateSampleMessages
+import com.erikproject.messanger.domian.usecase.GetChatMembers
+import com.erikproject.messanger.domian.usecase.GetChats
+import com.erikproject.messanger.domian.usecase.GetMessages
+import com.erikproject.messanger.presentation.CustomViewModel
 import comerikprojectdatabase.Local_chat_members
 import comerikprojectdatabase.Local_chats
 import comerikprojectdatabase.Local_messages
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-
+import kotlinx.coroutines.launch
 
 /**
  * ViewModel для экрана списка чатов
  */
 class ChatsViewModel(
+    private val getChats: GetChats,
+    private val getChatMembers: GetChatMembers,
+    private val getMessages: GetMessages,
     private val navigator: Navigator
-) {
+) : CustomViewModel(){
     // Имитация данных из базы данных
     private val _chats = MutableStateFlow<List<Local_chats>>(emptyList())
     val chats: StateFlow<List<Local_chats>> = _chats.asStateFlow()
@@ -32,27 +36,15 @@ class ChatsViewModel(
     val messages: StateFlow<List<Local_messages>> = _messages.asStateFlow()
 
     init {
-        loadChats()
-        loadChatMembers()
-        loadMessages()
+        loadData()
     }
 
-    private fun loadMessages() {
-        // Здесь в реальном приложении будет запрос к базе данных
-        // Имитация данных для примера
-        _messages.value = generateSampleMessages()
-    }
-
-    private fun loadChatMembers() {
-        // Здесь в реальном приложении будет запрос к базе данных
-        // Имитация данных для примера
-        _chatMembers.value = generateSampleChatsMembers()
-    }
-
-    private fun loadChats() {
-        // Здесь в реальном приложении будет запрос к базе данных
-        // Имитация данных для примера
-        _chats.value = generateSampleChats()
+    private fun loadData() {
+        viewModelScope.launch {
+            _chats.value = getChats()
+            _chatMembers.value = getChatMembers()
+            _messages.value = getMessages()
+        }
     }
 
     fun onChatClick(chatId: Long) {

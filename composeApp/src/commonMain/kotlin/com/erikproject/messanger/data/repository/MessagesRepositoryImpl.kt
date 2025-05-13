@@ -1,27 +1,32 @@
 package com.erikproject.messanger.data.repository
 
+import com.erikproject.messanger.domian.repository.MessagesRepository
 import comerikprojectdatabase.Local_messages
 import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock
 
-class MessagesRepository {
+class MessagesRepositoryImpl : MessagesRepository {
     private val messages = mutableListOf<Local_messages>()
 
     init {
         messages.addAll(generateSampleMessages())
     }
 
-    suspend fun getMessagesByChatId(chatId: Long): List<Local_messages> {
+    override suspend fun getMessages(): List<Local_messages> {
+        return messages
+    }
+
+    override suspend fun getMessagesByChatId(chatId: Long): List<Local_messages> {
         // Simulate network delay
         delay(300)
         return messages.filter { it.chat_id == chatId }.sortedBy { it.created_at }
     }
 
-    suspend fun addMessage(message: Local_messages) {
+    override suspend fun addMessage(message: Local_messages) {
         messages.add(message)
     }
 
-    suspend fun updateMessageStatus(
+    override suspend fun updateMessageStatus(
         messageId: Long,
         sendStatus: String,
         deliveryStatus: String,
@@ -224,4 +229,5 @@ class MessagesRepository {
             )
         )
     }
+
 }

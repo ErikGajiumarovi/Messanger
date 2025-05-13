@@ -1,4 +1,0 @@
-package com.erikproject.messanger.data.repository
-
-class ContactRepository {
-}

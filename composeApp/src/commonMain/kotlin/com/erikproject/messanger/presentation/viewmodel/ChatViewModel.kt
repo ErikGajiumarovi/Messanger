@@ -1,9 +1,13 @@
 package com.erikproject.messanger.presentation.viewmodel
 
 import com.erikproject.messanger.Navigator
-import com.erikproject.messanger.data.repository.ChatMembersRepository
-import com.erikproject.messanger.data.repository.ChatsRepository
-import com.erikproject.messanger.data.repository.MessagesRepository
+import com.erikproject.messanger.domian.repository.ChatMembersRepository
+import com.erikproject.messanger.domian.repository.ChatsRepository
+import com.erikproject.messanger.domian.repository.MessagesRepository
+import com.erikproject.messanger.domian.usecase.GetChatById
+import com.erikproject.messanger.domian.usecase.GetChatMembersByChatId
+import com.erikproject.messanger.domian.usecase.GetMessagesByChatId
+import com.erikproject.messanger.domian.usecase.SendMessage
 import com.erikproject.messanger.presentation.CustomViewModel
 import com.erikproject.messanger.utils.Time
 import comerikprojectdatabase.Local_chat_members
@@ -15,46 +19,41 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
-
-class ChatViewModel(
+class ChatViewModel (
     private val chatId: Long,
     private val navigator: Navigator,
-    private val messagesRepository: MessagesRepository = MessagesRepository(),
-    private val chatsRepository: ChatsRepository = ChatsRepository(),
-    private val chatMembersRepository: ChatMembersRepository = ChatMembersRepository()
+    private val getChatById: GetChatById,
+    private val getMessagesByChatId: GetMessagesByChatId,
+    private val getChatMembersByChatId: GetChatMembersByChatId,
+    private val sendMessage: SendMessage
 ) : CustomViewModel() {
-    // UI states
+
     private val _chatState = MutableStateFlow<ChatUiState>(ChatUiState.Loading)
     val chatState = _chatState.asStateFlow()
 
     private val _messageText = MutableStateFlow("")
     val messageText = _messageText.asStateFlow()
 
-    // User ID of the current user - in a real app, get from user session
     private val currentUserId = 1001L
 
     init {
-        loadChat()
+        loadInitialData()
     }
 
-    fun loadChat() {
+    private fun loadInitialData() {
         viewModelScope.launch {
             try {
-                val chat = chatsRepository.getChatById(chatId)
-                val messages = messagesRepository.getMessagesByChatId(chatId)
-                val members = chatMembersRepository.getChatMembersByChatId(chatId)
+                val chat = getChatById(chatId)
+                val messages = getMessagesByChatId(chatId)
+                val members = getChatMembersByChatId(chatId)
 
-                if (chat != null) {
-                    _chatState.value = ChatUiState.Success(
-                        chat = chat,
-                        messages = messages,
-                        members = members
-                    )
+                _chatState.value = if (chat != null) {
+                    ChatUiState.Success(chat, messages, members)
                 } else {
-                    _chatState.value = ChatUiState.Error("Chat not found")
+                    ChatUiState.Error("Chat not found")
                 }
             } catch (e: Exception) {
-                _chatState.value = ChatUiState.Error("Failed to load chat: ${e.message}")
+                _chatState.value = ChatUiState.Error("Loading failed: ${e.message}")
             }
         }
     }
@@ -64,58 +63,17 @@ class ChatViewModel(
     }
 
     fun sendMessage() {
-        val messageText = _messageText.value.trim()
-        if (messageText.isEmpty()) return
+        val text = _messageText.value.trim()
+        if (text.isEmpty()) return
 
         viewModelScope.launch {
-            val now = Clock.System.now().toEpochMilliseconds()
-
-            // Generate a new message ID (in a real app, this would be done differently)
-            val newMessageId = Time.getTimeMills()
-
-            val newMessage = Local_messages(
-                id = newMessageId,
-                server_id = null, // Will be set when synced with server
-                chat_id = chatId,
-                sender_id = currentUserId,
-                text = messageText,
-                is_deleted = 0L,
-                created_at = now,
-                updated_at = null,
-                send_status = "sending",
-                is_mine = 1L,
-                delivery_status = "pending",
-                error_message = null,
-                sync_status = "not_synced",
-                local_media_path = null
-            )
-
-            // Add message to database
-            messagesRepository.addMessage(newMessage)
-
-            // Update chat with last message
-            chatsRepository.updateLastMessage(
+            sendMessage(
                 chatId = chatId,
-                lastMessageId = newMessageId,
-                lastMessageText = messageText,
-                lastMessageTime = now
+                text = text,
+                currentUserId = currentUserId
             )
-
-            // Clear input field
             _messageText.value = ""
-
-            // Reload chat data to update UI
-            loadChat()
-
-            // Simulate sending message to server (in a real app this would call an API)
-            delay(1000)
-            messagesRepository.updateMessageStatus(
-                messageId = newMessageId,
-                sendStatus = "sent",
-                deliveryStatus = "delivered",
-                syncStatus = "synced"
-            )
-            loadChat()
+            loadInitialData() // Обновляем данные после отправки
         }
     }
 }

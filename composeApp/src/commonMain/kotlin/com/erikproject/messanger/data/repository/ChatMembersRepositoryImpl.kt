@@ -1,17 +1,22 @@
 package com.erikproject.messanger.data.repository
 
+import com.erikproject.messanger.domian.repository.ChatMembersRepository
 import comerikprojectdatabase.Local_chat_members
 import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock
 
-class ChatMembersRepository {
+class ChatMembersRepositoryImpl : ChatMembersRepository {
     private val chatMembers = mutableListOf<Local_chat_members>()
 
     init {
         chatMembers.addAll(generateSampleChatsMembers())
     }
 
-    suspend fun getChatMembersByChatId(chatId: Long): List<Local_chat_members> {
+    override suspend fun getChatMembers(): List<Local_chat_members> {
+        return chatMembers
+    }
+
+    override suspend fun getChatMembersByChatId(chatId: Long): List<Local_chat_members> {
         // Simulate network delay
         delay(150)
         return chatMembers.filter { it.chat_id == chatId }
@@ -89,4 +94,6 @@ class ChatMembersRepository {
             )
         )
     }
+
+
 }
