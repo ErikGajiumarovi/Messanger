@@ -1,9 +1,10 @@
 package com.erikproject.messanger.presentation.viewmodel
 
-import androidx.lifecycle.ViewModel
+import com.erikproject.messanger.Navigator
+import com.erikproject.messanger.presentation.CustomViewModel
 
 class HomeViewModel(
-
+    private val navigator: Navigator
 ) : CustomViewModel() {
 
 }

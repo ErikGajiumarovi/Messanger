@@ -16,13 +16,22 @@ import com.erikproject.messanger.presentation.view.LoginScreen
 import com.erikproject.messanger.presentation.viewmodel.ChatViewModel
 import com.erikproject.messanger.presentation.viewmodel.HomeViewModel
 import com.erikproject.messanger.presentation.viewmodel.LoginViewModel
+import comerikprojectdatabase.Local_chat_members
+import comerikprojectdatabase.Local_chats
+import comerikprojectdatabase.Local_messages
 import org.koin.mp.KoinPlatform.getKoin
 
-enum class Screen { Home, Chat, Login }
+sealed class Screen {
+    object Home : Screen()
+    object Login : Screen()
+    data class Chat(val chatId: Long) : Screen()
+}
+
 
 @Composable
 fun App() {
-    val currentScreen by remember { mutableStateOf(Screen.Home) }
+
+    val navigator: Navigator = getKoin().get()
 
     FileUtils.mkdir(getPathToDBs())
 
@@ -33,16 +42,29 @@ fun App() {
             )
         )
     ) {
-        when (currentScreen) {
-            Screen.Home -> HomeScreen(HomeViewModel())
-            Screen.Chat -> ChatScreen(ChatViewModel())
-            Screen.Login -> {
-                val loginViewModel: LoginViewModel = getKoin().get()
-                LoginScreen(loginViewModel)
+        when (val screen = navigator.currentScreen.value) {
+            is Screen.Home -> HomeScreen(viewModel = getKoin().get())
+            is Screen.Chat -> {
+                val chatViewModel = ChatViewModel(chatId = screen.chatId, navigator = navigator)
+                ChatScreen(viewModel = chatViewModel)
+            }
+            is Screen.Login -> {
+                LoginScreen(viewModel = getKoin().get())
             }
         }
     }
 }
+
+
+class Navigator {
+    var currentScreen: MutableState<Screen> = mutableStateOf(Screen.Home)
+
+    fun navigateTo(screen: Screen) {
+        currentScreen.value = screen
+    }
+}
+
+
 
 
 
