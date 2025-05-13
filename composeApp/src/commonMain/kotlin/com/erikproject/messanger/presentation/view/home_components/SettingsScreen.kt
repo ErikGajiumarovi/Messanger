@@ -6,9 +6,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.erikproject.messanger.presentation.viewmodel.home_components.SettingsViewModel
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(
+    viewModel: SettingsViewModel
+) {
     // Содержимое экрана настроек
     Box(
         modifier = Modifier.fillMaxSize(),

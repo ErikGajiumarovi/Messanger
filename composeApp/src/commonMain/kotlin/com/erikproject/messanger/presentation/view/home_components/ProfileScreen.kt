@@ -6,9 +6,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.erikproject.messanger.presentation.viewmodel.home_components.ProfileViewModel
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    viewModel: ProfileViewModel
+) {
     // Содержимое экрана профиля
     Box(
         modifier = Modifier.fillMaxSize(),

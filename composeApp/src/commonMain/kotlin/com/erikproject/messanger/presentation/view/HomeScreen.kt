@@ -34,6 +34,7 @@ import com.erikproject.messanger.presentation.view.home_components.SettingsScree
 import com.erikproject.messanger.presentation.viewmodel.ChatViewModel
 import com.erikproject.messanger.presentation.viewmodel.home_components.ChatsViewModel
 import com.erikproject.messanger.presentation.viewmodel.HomeViewModel
+import org.koin.mp.KoinPlatform.getKoin
 
 @Composable
 fun HomeScreen(
@@ -116,16 +117,16 @@ fun HomeScreen(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Screen.Chats.route) {
-                ChatsScreen(ChatsViewModel())
+                ChatsScreen(getKoin().get())
             }
             composable(Screen.Contacts.route) {
-                ContactsScreen()
+                ContactsScreen(getKoin().get())
             }
             composable(Screen.Settings.route) {
-                SettingsScreen()
+                SettingsScreen(getKoin().get())
             }
             composable(Screen.Profile.route) {
-                ProfileScreen()
+                ProfileScreen(getKoin().get())
             }
         }
     }
