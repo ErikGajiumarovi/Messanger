@@ -38,6 +38,9 @@ selectChatsByUserId:
 SELECT * FROM local_chat_members
 WHERE user_id = ?;
 
+selectChats:
+SELECT * FROM local_chat_members;
+
 -- Обновление времени синхронизации
 updateSyncTime:
 UPDATE local_chat_members

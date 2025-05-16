@@ -41,9 +41,9 @@ private val appModule = module {
             storage = get()
         )
     }
-    single<MessagesRepository> { MessagesRepositoryImpl() }
-    single<ChatMembersRepository> { ChatMembersRepositoryImpl() }
-    single<ChatsRepository> { ChatsRepositoryImpl() }
+    single<MessagesRepository> { MessagesRepositoryImpl(get<AppDatabase>().messagesQueries) }
+    single<ChatMembersRepository> { ChatMembersRepositoryImpl(get<AppDatabase>().chatMembersQueries) }
+    single<ChatsRepository> { ChatsRepositoryImpl(get<AppDatabase>().chatsQueries) }
 
     // UseCases
     single<GetChatById> { GetChatById(get()) }

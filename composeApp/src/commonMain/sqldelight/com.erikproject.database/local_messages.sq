@@ -50,6 +50,9 @@ SELECT * FROM local_messages WHERE is_mine = 1 AND send_status = 'pending' AND i
 selectPendingSyncMessages:
 SELECT * FROM local_messages WHERE sync_status = 'pending' ORDER BY created_at ASC;
 
+selectMessages:
+SELECT * FROM local_messages;
+
 -- Update all fields of a message by local ID
 updateMessage:
 UPDATE local_messages

@@ -2,14 +2,19 @@ package com.erikproject.messanger.data.repository
 
 import com.erikproject.messanger.domian.repository.MessagesRepository
 import comerikprojectdatabase.Local_messages
-import kotlinx.coroutines.delay
+import comerikprojectdatabase.Local_messagesQueries
+
 import kotlinx.datetime.Clock
 
-class MessagesRepositoryImpl : MessagesRepository {
+class MessagesRepositoryImpl(
+    db: Local_messagesQueries
+) : MessagesRepository {
     private val messages = mutableListOf<Local_messages>()
 
     init {
-        messages.addAll(generateSampleMessages())
+        db.selectMessages().executeAsList().forEach {
+            messages.add(it)
+        }
     }
 
     override suspend fun getMessages(): List<Local_messages> {
@@ -17,8 +22,6 @@ class MessagesRepositoryImpl : MessagesRepository {
     }
 
     override suspend fun getMessagesByChatId(chatId: Long): List<Local_messages> {
-        // Simulate network delay
-        delay(300)
         return messages.filter { it.chat_id == chatId }.sortedBy { it.created_at }
     }
 
