@@ -40,7 +40,7 @@ class ChatViewModel (
         loadInitialData()
     }
 
-    private fun loadInitialData() {
+    fun loadInitialData() {
         viewModelScope.launch {
             try {
                 val chat = getChatById(chatId)
