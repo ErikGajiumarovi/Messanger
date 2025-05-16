@@ -33,7 +33,6 @@ private val appModule = module {
     single<AppDatabase> { AppDatabase(getDriver(getPathToDBs().resolve("messenger.db"))) }
     single<NetworkClient> { NetworkClient(get()) }
     single<TokenStorage> { TokenStorage() }
-    single<Navigator> { Navigator() }
 
     // Repositories
     single<LoginRepository> {
@@ -56,12 +55,11 @@ private val appModule = module {
     single<SendMessage> { SendMessage(get(), get()) }
 
     // Main ViewModels
-    factory<LoginViewModel> { LoginViewModel(get(), get()) }
+    factory<LoginViewModel> { LoginViewModel(get()) }
     factory<HomeViewModel> { HomeViewModel(get()) }
     factory<ChatViewModel> { (chatId: Long) ->
         ChatViewModel(
             chatId,
-            get(),
             get(),
             get(),
             get(),
@@ -70,7 +68,7 @@ private val appModule = module {
     }
 
     // Home ViewModels
-    factory<ChatsViewModel> { ChatsViewModel(get(), get(), get(), get()) }
+    factory<ChatsViewModel> { ChatsViewModel(get(), get(), get()) }
     factory<ContactsViewModel> { ContactsViewModel() }
     factory<ProfileViewModel> { ProfileViewModel() }
     factory<SettingsViewModel> { SettingsViewModel() }

@@ -31,6 +31,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.erikproject.messanger.presentation.AppScreen
+import com.erikproject.messanger.presentation.Navigator
 import com.erikproject.messanger.presentation.viewmodel.home_components.ChatsViewModel
 import comerikprojectdatabase.Local_chats
 import kotlinx.datetime.Clock
@@ -39,10 +41,12 @@ import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatsScreen(
-    viewModel: ChatsViewModel
+fun ChatsView(
+    viewModel: ChatsViewModel,
+    navigator: Navigator<AppScreen>,
 ) {
     val chats by viewModel.chats.collectAsState()
     val chatMembers by viewModel.chatMembers.collectAsState()
@@ -72,7 +76,7 @@ fun ChatsScreen(
                 contentPadding = PaddingValues(vertical = 8.dp)
             ) {
                 items(chats) { chat ->
-                    ChatItem(chat = chat, viewModel = viewModel)
+                    ChatItem(chat = chat, onClick = { navigator.navigateTo(AppScreen.Chat(chat.id)) })
                 }
             }
         }
@@ -82,13 +86,13 @@ fun ChatsScreen(
 @Composable
 fun ChatItem(
     chat: Local_chats,
-    viewModel: ChatsViewModel
+    onClick: (Long) -> Unit,
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 4.dp),
-        onClick = { viewModel.onChatClick(chat.id) }
+        onClick = { onClick(chat.id) }
     ) {
         Row(
             modifier = Modifier

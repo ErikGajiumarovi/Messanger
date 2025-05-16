@@ -72,11 +72,4 @@ object FileUtils {
             emptyList()
         }
     }
-
-    fun getDatabaseFiles(): List<String> {
-        val path = getPathToDBs()
-        val dbs = ls(path).filter { it.endsWith(".db") }
-        println("Looking for db's in ${path} Found ${dbs}")
-        return dbs
-    }
 }

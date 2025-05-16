@@ -1,7 +1,5 @@
 package com.erikproject.messanger.presentation.viewmodel.home_components
 
-import com.erikproject.messanger.Navigator
-import com.erikproject.messanger.Screen
 import com.erikproject.messanger.domian.usecase.GetChatMembers
 import com.erikproject.messanger.domian.usecase.GetChats
 import com.erikproject.messanger.domian.usecase.GetMessages
@@ -21,8 +19,7 @@ class ChatsViewModel(
     private val getChats: GetChats,
     private val getChatMembers: GetChatMembers,
     private val getMessages: GetMessages,
-    private val navigator: Navigator
-) : CustomViewModel(){
+) : CustomViewModel() {
     // Имитация данных из базы данных
     private val _chats = MutableStateFlow<List<Local_chats>>(emptyList())
     val chats: StateFlow<List<Local_chats>> = _chats.asStateFlow()
@@ -45,9 +42,5 @@ class ChatsViewModel(
             _chatMembers.value = getChatMembers()
             _messages.value = getMessages()
         }
-    }
-
-    fun onChatClick(chatId: Long) {
-        navigator.navigateTo(Screen.Chat(chatId))
     }
 }

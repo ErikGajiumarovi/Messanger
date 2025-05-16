@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import com.erikproject.messanger.presentation.viewmodel.home_components.ContactsViewModel
 
 @Composable
-fun ContactsScreen(
+fun ContactsView(
     viewModel: ContactsViewModel
 ) {
     // Содержимое экрана контактов

@@ -30,14 +30,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.erikproject.messanger.Navigator
 import com.erikproject.messanger.presentation.viewmodel.LoginViewModel
-import org.koin.compose.getKoin
-import org.koin.compose.viewmodel.koinViewModel
+import org.koin.mp.KoinPlatform.getKoin
 
 @Composable
-fun LoginScreen(
-    viewModel: LoginViewModel
+fun LoginView(
+    viewModel: LoginViewModel = getKoin().get()
 ) {
     val username by viewModel.username.collectAsState()
     val password by viewModel.password.collectAsState()

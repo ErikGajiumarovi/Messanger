@@ -1,10 +1,11 @@
 package com.erikproject.messanger.presentation.viewmodel
 
-import com.erikproject.messanger.Navigator
+import com.erikproject.messanger.presentation.AppScreen
 import com.erikproject.messanger.presentation.CustomViewModel
+import com.erikproject.messanger.presentation.Navigator
 
 class HomeViewModel(
-    private val navigator: Navigator
+    navigator: Navigator<AppScreen>,
 ) : CustomViewModel() {
 
 }

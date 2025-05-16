@@ -1,17 +1,16 @@
 package com.erikproject.messanger.presentation.viewmodel
 
-import com.erikproject.messanger.Navigator
 import com.erikproject.messanger.data.repository.LoginRepository
+import com.erikproject.messanger.presentation.AppScreen
 import com.erikproject.messanger.presentation.CustomViewModel
+import com.erikproject.messanger.presentation.Navigator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val repository: LoginRepository,
-    private val navigator: Navigator
 ) : CustomViewModel() {
-
     // Поля для редактирования со стороны View
     private val _username = MutableStateFlow("")
     val username = _username.asStateFlow()

@@ -18,8 +18,6 @@ class ChatsRepositoryImpl : ChatsRepository {
     }
 
     override suspend fun getChatById(chatId: Long): Local_chats? {
-        // Simulate network delay
-        delay(200)
         return chats.find { it.id == chatId }
     }
 

@@ -1,6 +1,5 @@
 package com.erikproject.messanger.presentation.viewmodel
 
-import com.erikproject.messanger.Navigator
 import com.erikproject.messanger.domian.repository.ChatMembersRepository
 import com.erikproject.messanger.domian.repository.ChatsRepository
 import com.erikproject.messanger.domian.repository.MessagesRepository
@@ -8,7 +7,9 @@ import com.erikproject.messanger.domian.usecase.GetChatById
 import com.erikproject.messanger.domian.usecase.GetChatMembersByChatId
 import com.erikproject.messanger.domian.usecase.GetMessagesByChatId
 import com.erikproject.messanger.domian.usecase.SendMessage
+import com.erikproject.messanger.presentation.AppScreen
 import com.erikproject.messanger.presentation.CustomViewModel
+import com.erikproject.messanger.presentation.Navigator
 import com.erikproject.messanger.utils.Time
 import comerikprojectdatabase.Local_chat_members
 import comerikprojectdatabase.Local_chats
@@ -21,7 +22,6 @@ import kotlinx.datetime.Clock
 
 class ChatViewModel (
     private val chatId: Long,
-    private val navigator: Navigator,
     private val getChatById: GetChatById,
     private val getMessagesByChatId: GetMessagesByChatId,
     private val getChatMembersByChatId: GetChatMembersByChatId,

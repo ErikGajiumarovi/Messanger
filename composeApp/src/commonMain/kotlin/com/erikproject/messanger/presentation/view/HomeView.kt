@@ -17,57 +17,48 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import com.erikproject.messanger.Navigator
-import com.erikproject.messanger.presentation.view.home_components.ChatsScreen
-import com.erikproject.messanger.presentation.view.home_components.ContactsScreen
-import com.erikproject.messanger.presentation.view.home_components.ProfileScreen
-import com.erikproject.messanger.presentation.view.home_components.SettingsScreen
-import com.erikproject.messanger.presentation.viewmodel.ChatViewModel
-import com.erikproject.messanger.presentation.viewmodel.home_components.ChatsViewModel
-import com.erikproject.messanger.presentation.viewmodel.HomeViewModel
+import com.erikproject.messanger.presentation.AppScreen
+import com.erikproject.messanger.presentation.Navigator
+import com.erikproject.messanger.presentation.view.home_components.ChatsView
+import com.erikproject.messanger.presentation.view.home_components.ContactsView
+import com.erikproject.messanger.presentation.view.home_components.ProfileView
+import com.erikproject.messanger.presentation.view.home_components.SettingsView
 import org.koin.mp.KoinPlatform.getKoin
 
 @Composable
-fun HomeScreen(
-    viewModel: HomeViewModel
+fun HomeView(
+    navigator: Navigator<AppScreen>,
 ) {
+    val navigatorMenu = remember { Navigator(AppContent.Chats) }
+    val currentScreen by navigatorMenu.currentScreen
+    
     val navItems = listOf(
         NavigationItem(
             title = "Чаты",
             icon = Icons.Default.Home,
-            screen = Screen.Chats
+            view = AppContent.Chats
         ),
         NavigationItem(
             title = "Контакты",
             icon = Icons.Default.Person,
-            screen = Screen.Contacts
+            view = AppContent.Contacts
         ),
         NavigationItem(
             title = "Настройки",
             icon = Icons.Default.Settings,
-            screen = Screen.Settings
+            view = AppContent.Settings
         ),
         NavigationItem(
             title = "Профиль",
             icon = Icons.Default.AccountCircle,
-            screen = Screen.Profile
+            view = AppContent.Profile
         )
     )
-
-    val navController = rememberNavController()
-    val currentBackStack by navController.currentBackStackEntryAsState()
-    val currentDestination = currentBackStack?.destination
-    val currentScreen =
-        navItems.find { it.screen.route == currentDestination?.route } ?: navItems[0]
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -78,18 +69,10 @@ fun HomeScreen(
                     .shadow(8.dp)
             ) {
                 navItems.forEach { item ->
-                    val selected = currentScreen == item
+                    val selected = currentScreen == item.view
                     NavigationBarItem(
                         selected = selected,
-                        onClick = {
-                            navController.navigate(item.screen.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
+                        onClick = { navigatorMenu.navigateTo(item.view) },
                         icon = {
                             Icon(
                                 imageVector = item.icon,
@@ -111,23 +94,14 @@ fun HomeScreen(
             }
         }
     ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = Screen.Chats.route,
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            composable(Screen.Chats.route) {
-                ChatsScreen(getKoin().get())
-            }
-            composable(Screen.Contacts.route) {
-                ContactsScreen(getKoin().get())
-            }
-            composable(Screen.Settings.route) {
-                SettingsScreen(getKoin().get())
-            }
-            composable(Screen.Profile.route) {
-                ProfileScreen(getKoin().get())
-            }
+        // Display screen based on current selection
+        val contentModifier = Modifier.padding(innerPadding)
+        
+        when (currentScreen) {
+            AppContent.Chats -> ChatsView(getKoin().get(), navigator)
+            AppContent.Contacts -> ContactsView(getKoin().get())
+            AppContent.Settings -> SettingsView(getKoin().get())
+            AppContent.Profile -> ProfileView(getKoin().get())
         }
     }
 }
@@ -137,14 +111,14 @@ fun HomeScreen(
 data class NavigationItem(
     val title: String,
     val icon: ImageVector,
-    val screen: Screen
+    val view: AppContent
 )
 
-sealed class Screen(val route: String) {
-    object Chats : Screen("chats")
-    object Contacts : Screen("contacts")
-    object Settings : Screen("settings")
-    object Profile : Screen("profile")
+enum class AppContent {
+    Chats,
+    Contacts,
+    Settings,
+    Profile
 }
 
 
